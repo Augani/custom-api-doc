@@ -1,10 +1,10 @@
 {
   "version": "1.0.0",
-  "title": "Sample API Documentation",
+  "title": "SecondStax API Documentation",
   "Summary": [
     {
-      "name": "Sample Introduction",
-      "content": "Welcome to the Sample API documentation. This API demonstrates basic CRUD operations for a user management system.\n"
+      "name": "Introduction",
+      "content": "Welcome to the SecondStax API documentation. This API allows you to interact with our mutual fund management system, handling user authentication, fund operations, subscriptions, transactions, and more.\n"
     },
     {
       "name": "Authentication",
@@ -12,7 +12,7 @@
     },
     {
       "name": "Common Use Cases",
-      "content": "1. User Management:\n   - Register a new user: POST /api/v1/users\n   - Get all users: GET /api/v1/users\n   - Get a specific user: GET /api/v1/users/{id}\n   - Update a user: PUT /api/v1/users/{id}\n   - Delete a user: DELETE /api/v1/users/{id}\n"
+      "content": "1. User Registration and Authentication:\n   - Register a new user: /api/v1/auth/register\n   - Login: /api/v1/auth/login\n   - Use the returned token for authenticated requests\n   - Logout: /api/v1/auth/logout\n   - Refresh token: /api/v1/auth/refresh-token\n   - Reset password flow: \n     /api/v1/auth/forgot-password\n     /api/v1/auth/reset-password\n   - Email verification:\n     /api/v1/auth/verify-email\n     /api/v1/auth/send-verification-email\n\n2. User Profile Management:\n   - Get user profile: /api/v1/user/profile\n   - Update user profile: /api/v1/user/profile\n   - Update password: /api/v1/user/update-password\n\n3. Fund Management:\n   - Get all funds: /api/v1/fund\n   - Create a new fund: /api/v1/fund\n   - Get a specific fund: /api/v1/fund/{id}\n   - Update a fund: /api/v1/fund/{id}\n   - Delete a fund: /api/v1/fund/{id}\n\n4. Subscription Management:\n   - Create a subscription: /api/v1/subscriptions\n   - Get a subscription: /api/v1/subscriptions/{id}\n   - Update a subscription: /api/v1/subscriptions/{id}\n   - Delete a subscription: /api/v1/subscriptions/{id}\n\n5. Transaction Management:\n   - Get all transactions: /api/v1/transaction\n   - Update a transaction: /api/v1/transaction\n   - Get a specific transaction: /api/v1/transaction/{id}\n   - Delete a transaction: /api/v1/transaction/{id}\n   - Get transactions overview: /api/v1/transaction/overview\n\n6. Portfolio Management:\n   - Get portfolio performance: /api/v1/portfolio/performance\n   - Get total investment: /api/v1/portfolio/total-investment\n   - Get portfolio summary: /api/v1/portfolio/summary\n\n7. Investor Management:\n   - Get investor overview: /api/v1/investor/overview\n   - Get investor list: /api/v1/investor/list\n\n8. Partnership Management:\n   - Get partnership overview: /api/v1/partnership/overview/{id}\n   - Get partnership performance: /api/v1/partnership/performance/{filter}/{id}\n\n9. List of Values (LOV) Retrieval:\n   - Get partnerships LOV: /api/v1/lov/partners\n   - Get countries LOV: /api/v1/lov/countries\n   - Get currencies LOV: /api/v1/lov/currencies\n"
     },
     {
       "name": "Rate Limiting",
@@ -24,34 +24,200 @@
     },
     {
       "name": "Support",
-      "content": "If you have any questions or need assistance, please contact our support team at api-support@example.com.\n"
+      "content": "If you have any questions or need assistance, please contact our support team at api-support@secondstax.com.\n"
     }
   ],
-  "Users": [
+  "Authentication": [
     {
-      "name": "Create User",
-      "path": "/api/v1/users",
-      "description": "Create a new user"
+      "name": "Register",
+      "path": "/api/v1/auth/register",
+      "description": "Register a new user as an investor, broker, or admin. Admins can create brokers by passing a token."
     },
     {
-      "name": "Get All Users",
-      "path": "/api/v1/users",
-      "description": "Retrieve a list of all users"
+      "name": "Login",
+      "path": "/api/v1/auth/login",
+      "description": "Authenticate a user and receive a JWT token."
     },
     {
-      "name": "Get User",
-      "path": "/api/v1/users/{id}",
-      "description": "Retrieve details of a specific user"
+      "name": "Logout",
+      "path": "/api/v1/auth/logout",
+      "description": "Log out the authenticated user."
     },
     {
-      "name": "Update User",
-      "path": "/api/v1/users/{id}",
-      "description": "Update details of a specific user"
+      "name": "Refresh Token",
+      "path": "/api/v1/auth/refresh-token",
+      "description": "Refresh the authentication token."
     },
     {
-      "name": "Delete User",
-      "path": "/api/v1/users/{id}",
-      "description": "Delete a specific user"
+      "name": "Forgot Password",
+      "path": "/api/v1/auth/forgot-password",
+      "description": "Request a password reset email."
+    },
+    {
+      "name": "Reset Password",
+      "path": "/api/v1/auth/reset-password",
+      "description": "Reset the user's password using a token."
+    },
+    {
+      "name": "Verify Email",
+      "path": "/api/v1/auth/verify-email",
+      "description": "Verify the user's email address."
+    },
+    {
+      "name": "Send Verification Email",
+      "path": "/api/v1/auth/send-verification-email",
+      "description": "Resend the email verification link."
+    }
+  ],
+  "User Management": [
+    {
+      "name": "Get User Profile",
+      "path": "/api/v1/user/profile",
+      "description": "Retrieve the authenticated user's profile."
+    },
+    {
+      "name": "Update User Profile",
+      "path": "/api/v1/user/profile",
+      "description": "Update the authenticated user's profile information."
+    },
+    {
+      "name": "Update Password",
+      "path": "/api/v1/user/update-password",
+      "description": "Update the authenticated user's password."
+    }
+  ],
+  "Fund Management": [
+    {
+      "name": "Get All Funds",
+      "path": "/api/v1/fund",
+      "description": "Retrieve a list of all funds with optional filtering and pagination."
+    },
+    {
+      "name": "Create Fund",
+      "path": "/api/v1/fund",
+      "description": "Create a new mutual fund."
+    },
+    {
+      "name": "Get Fund",
+      "path": "/api/v1/fund/{id}",
+      "description": "Retrieve details of a specific fund."
+    },
+    {
+      "name": "Update Fund",
+      "path": "/api/v1/fund/{id}",
+      "description": "Update details of a specific fund."
+    },
+    {
+      "name": "Delete Fund",
+      "path": "/api/v1/fund/{id}",
+      "description": "Delete a specific fund."
+    }
+  ],
+  "Subscription Management": [
+    {
+      "name": "Create Subscription",
+      "path": "/api/v1/subscription",
+      "description": "Create a new subscription for a fund."
+    },
+    {
+      "name": "Get Subscription",
+      "path": "/api/v1/subscription/{id}",
+      "description": "Retrieve details of a specific subscription."
+    },
+    {
+      "name": "Update Subscription",
+      "path": "/api/v1/subscription/{id}",
+      "description": "Update details of a specific subscription."
+    },
+    {
+      "name": "Delete Subscription",
+      "path": "/api/v1/subscription/{id}",
+      "description": "Delete a specific subscription."
+    }
+  ],
+  "Transaction Management": [
+    {
+      "name": "Get Transactions",
+      "path": "/api/v1/transaction",
+      "description": "Retrieve a list of transactions with optional filtering."
+    },
+    {
+      "name": "Update Transaction",
+      "path": "/api/v1/transaction",
+      "description": "Update details of a specific transaction."
+    },
+    {
+      "name": "Get Transaction",
+      "path": "/api/v1/transaction/{id}",
+      "description": "Retrieve details of a specific transaction."
+    },
+    {
+      "name": "Delete Transaction",
+      "path": "/api/v1/transaction/{id}",
+      "description": "Delete a specific transaction."
+    },
+    {
+      "name": "Get Transactions Overview",
+      "path": "/api/v1/transaction/overview",
+      "description": "Retrieve an overview of transactions including total investment, profit, loss, and performance metrics."
+    }
+  ],
+  "Portfolio Management": [
+    {
+      "name": "Get Portfolio Performance",
+      "path": "/api/v1/portfolio/performance",
+      "description": "Retrieve portfolio performance metrics including total investment and various performance indicators."
+    },
+    {
+      "name": "Get Total Investment",
+      "path": "/api/v1/portfolio/total-investment",
+      "description": "Retrieve the total investment amount and week-to-week performance."
+    },
+    {
+      "name": "Get Portfolio Summary",
+      "path": "/api/v1/portfolio/summary",
+      "description": "Retrieve a summary of the portfolio including total value and percentage change."
+    }
+  ],
+  "Investor Management": [
+    {
+      "name": "Get Investor Overview",
+      "path": "/api/v1/investor/overview",
+      "description": "Retrieve an overview of an investor's performance including total investment, profit, loss, and ROI."
+    },
+    {
+      "name": "Get Investor List",
+      "path": "/api/v1/investor/list",
+      "description": "Retrieve a list of investors with their basic information and status."
+    }
+  ],
+  "Partnership Management": [
+    {
+      "name": "Get Partnership Overview",
+      "path": "/api/v1/partnership/overview/{id}",
+      "description": "Retrieve an overview of a partnership's performance including total investment, profit, loss, and ROI."
+    },
+    {
+      "name": "Get Partnership Performance",
+      "path": "/api/v1/partnership/performance/{filter}/{id}",
+      "description": "Retrieve detailed performance metrics for a partnership based on a specified filter."
+    }
+  ],
+  "LOV": [
+    {
+      "name": "Get Partnerships LOV",
+      "path": "/api/v1/lov/partners",
+      "description": "Retrieve a list of partnerships for use in dropdowns or selection fields."
+    },
+    {
+      "name": "Get Countries LOV",
+      "path": "/api/v1/lov/countries",
+      "description": "Retrieve a list of countries with their codes and calling codes."
+    },
+    {
+      "name": "Get Currencies LOV",
+      "path": "/api/v1/lov/currencies",
+      "description": "Retrieve a list of currencies with their codes and associated country codes."
     }
   ]
 }
