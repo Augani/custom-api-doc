@@ -1,0 +1,21 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "swagger page generator",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js --swagger ./swagger.yaml --menu ./menu.yaml && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Augustus Otu",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "js-yaml": "^4.1.0",
+    "minimist": "^1.2.8",
+    "yaml": "^2.5.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.13"
+  }
+}

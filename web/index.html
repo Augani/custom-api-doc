@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Documentation</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link type="text/css" href="assets/styles.min.css" rel="stylesheet" />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css"
+    />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <style type="text/tailwindcss">
+   
+    </style>
+    <!-- Add Toastify CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-900">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="w-64 bg-white shadow-lg overflow-y-auto fixed h-full transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0"
+      >
+        <div class="p-6 border-b border-gray-200">
+          <img
+            src="/assets/logo.svg"
+            alt="SecondStax Logo"
+            class="h-8"
+          />
+        </div>
+        <nav id="sidebar-nav" class="mt-6 overflow-y-auto h-full">
+          <!-- Dynamically populated by JavaScript -->
+        </nav>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      <div id="overlay" class="overlay"></div>
+
+      <!-- Main content -->
+      <main id="main-content" class="flex-1 overflow-y-auto md:ml-64">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+          <div
+            class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center"
+          >
+            <div class="flex items-center">
+              <button
+                id="sidebar-toggle"
+                class="mr-4 text-gray-500 hover:text-gray-900 focus:outline-none md:hidden"
+              >
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
+              <h1 class="textlg md:text-3xl font-bold text-gray-900">
+                API Documentation
+              </h1>
+            </div>
+            <a
+              href="/swagger"
+              class="text-blue-600 lg:text-lg text-xs hover:text-blue-800 font-medium"
+            >
+              View Swagger Docs
+            </a>
+          </div>
+        </header>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div id="content">
+            <!-- Dynamically populated by JavaScript -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script>
+      // document.addEventListener("DOMContentLoaded", function () {
+      //   const sidebar = document.getElementById("sidebar");
+      //   const sidebarToggle = document.getElementById("sidebar-toggle");
+      //   const overlay = document.getElementById("overlay");
+      //   const sideBarLinks = document.querySelectorAll(".linker");
+      //   console.log(sideBarLinks);
+      //   function toggleSidebar() {
+      //     sidebar.classList.toggle("sidebar-open");
+      //     overlay.classList.toggle("active");
+      //     document.body.classList.toggle("overflow-hidden");
+      //   }
+
+      //   sidebarToggle.addEventListener("click", toggleSidebar);
+
+      //   overlay.addEventListener("click", toggleSidebar);
+
+      //   // Close sidebar when clicking outside of it
+      //   document.addEventListener("click", function (event) {
+      //     const isClickInsideSidebar = sidebar.contains(event.target);
+      //     const isClickOnToggle = sidebarToggle.contains(event.target);
+      //     // create a new array from sideBarLinks
+      //     const links = Array.from(sideBarLinks);
+      //     const isClickOnLink = links.some((link) =>
+      //       link.contains(event.target)
+      //     );
+      //     console.log(isClickOnLink);
+      //     if (
+      //       !isClickInsideSidebar &&
+      //       !isClickOnToggle &&
+      //       sidebar.classList.contains("sidebar-open")
+      //     ) {
+      //       toggleSidebar();
+      //     } else if (isClickOnLink) {
+      //       toggleSidebar();
+      //     }
+      //   });
+      // });
+    </script>
+    <!-- Add Toastify JS -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <!-- Add these script tags just before your closing </body> tag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="module" src="assets/script.min.js"></script>
+  </body>
+</html>

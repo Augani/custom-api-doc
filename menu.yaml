@@ -1,0 +1,53 @@
+version: 1.0.0
+title: Sample API Documentation
+Summary:
+  - name: Sample Introduction
+    content: |
+      Welcome to the Sample API documentation. This API demonstrates basic CRUD operations for a user management system.
+
+  - name: Authentication
+    content: |
+      Most endpoints require authentication. To authenticate, obtain a JWT token by logging in via the /api/v1/auth/login endpoint. Include this token in the Authorization header of your requests:
+      
+      Authorization: Bearer <your_token_here>
+
+  - name: Common Use Cases
+    content: |
+      1. User Management:
+         - Register a new user: POST /api/v1/users
+         - Get all users: GET /api/v1/users
+         - Get a specific user: GET /api/v1/users/{id}
+         - Update a user: PUT /api/v1/users/{id}
+         - Delete a user: DELETE /api/v1/users/{id}
+
+  - name: Rate Limiting
+    content: |
+      Our API implements rate limiting to ensure fair usage. You are limited to 100 requests per minute. If you exceed this limit, you'll receive a 429 Too Many Requests response.
+
+  - name: Errors
+    content: |
+      The API uses conventional HTTP response codes to indicate the success or failure of an API request. In general:
+      - 2xx range indicate success
+      - 4xx range indicate an error that failed given the information provided (e.g., a required parameter was omitted, etc.)
+      - 5xx range indicate an error with our servers
+
+  - name: Support
+    content: |
+      If you have any questions or need assistance, please contact our support team at api-support@example.com.
+
+Users:
+  - name: Create User
+    path: /api/v1/users
+    description: Create a new user
+  - name: Get All Users
+    path: /api/v1/users
+    description: Retrieve a list of all users
+  - name: Get User
+    path: /api/v1/users/{id}
+    description: Retrieve details of a specific user
+  - name: Update User
+    path: /api/v1/users/{id}
+    description: Update details of a specific user
+  - name: Delete User
+    path: /api/v1/users/{id}
+    description: Delete a specific user

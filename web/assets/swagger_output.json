@@ -1,0 +1,2207 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mutual Fund API",
+    "version": "1.0.0",
+    "description": "API for managing mutual funds, users, subscriptions, and transactions."
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and registration"
+    },
+    {
+      "name": "User Management",
+      "description": "User profile and account management"
+    },
+    {
+      "name": "Fund Management",
+      "description": "CRUD operations for mutual funds"
+    },
+    {
+      "name": "Subscription Management",
+      "description": "Managing fund subscriptions"
+    },
+    {
+      "name": "Transaction Management",
+      "description": "Handling financial transactions"
+    },
+    {
+      "name": "Portfolio Management",
+      "description": "Managing user portfolios"
+    },
+    {
+      "name": "Partnership Management",
+      "description": "Managing partnerships and their performance"
+    },
+    {
+      "name": "LOV",
+      "description": "List of Values endpoints"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Register a new user. When registering a new user, you can choose to register as an investor, broker, or admin. So depending on the type of user you want to create, you need to pass the correct information and the correct role. When creating a broker, you need to be an admin and pass a token as an argument to validate the token and ensure that the broker is a valid broker. Make sure the partner code is valid and exists in the system before creating an investor.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Login",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "summary": "Logout",
+        "tags": ["Authentication"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh Token",
+        "tags": ["Authentication"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/forgot-password": {
+      "post": {
+        "summary": "Forgot Password",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset email sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "summary": "Reset Password",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/verify-email": {
+      "post": {
+        "summary": "Verify Email",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email verified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/send-verification-email": {
+      "post": {
+        "summary": "Send Verification Email. This is used to send a verification email to the user's email address. When a user registers, they receive a verification email to verify their email address. This is used to resend the verification email if the user did not receive the first one.",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendVerificationEmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          }
+        }
+      }
+    },
+    "/api/v1/user/profile": {
+      "get": {
+        "summary": "Get User Profile",
+        "tags": ["User Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update User Profile",
+        "tags": ["User Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserProfileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/user/update-password": {
+      "post": {
+        "summary": "Update Password",
+        "tags": ["User Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePasswordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/fund": {
+      "get": {
+        "summary": "Get All Funds",
+        "tags": ["Fund Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isActive",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isDeleted",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved funds",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllFundsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Fund",
+        "tags": ["Fund Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFundRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fund created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FundResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/fund/{id}": {
+      "get": {
+        "summary": "Get Fund By ID",
+        "tags": ["Fund Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved fund",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FundResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Fund",
+        "tags": ["Fund Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFundRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fund updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FundResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Fund",
+        "tags": ["Fund Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fund deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions": {
+      "post": {
+        "summary": "Create a new subscription",
+        "tags": ["Subscription Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubscriptionRequest"
+              },
+              "example": {
+                "fundId": "123e4567-e89b-12d3-a456-426614174000",
+                "amount": 1000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSubscriptionResponse"
+                },
+                "example": {
+                  "id": "789e0123-e45b-67d8-a901-234567890000",
+                  "amount": 1000,
+                  "status": "PENDING"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{subscriptionId}": {
+      "get": {
+        "summary": "Get subscription by ID",
+        "tags": ["Subscription Management"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "789e0123-e45b-67d8-a901-234567890000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSubscriptionByIdResponse"
+                },
+                "example": {
+                  "subscription": {
+                    "id": "789e0123-e45b-67d8-a901-234567890000",
+                    "fundId": "123e4567-e89b-12d3-a456-426614174000",
+                    "userId": "456e7890-e12b-34d5-a678-901234567000",
+                    "amount": 1000,
+                    "status": "PENDING",
+                    "createdAt": "2023-04-15T10:30:00Z",
+                    "updatedAt": "2023-04-15T10:30:00Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update subscription",
+        "tags": ["Subscription Management"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "789e0123-e45b-67d8-a901-234567890000"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+              },
+              "example": {
+                "amount": 1500,
+                "status": "APPROVED"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSubscriptionResponse"
+                },
+                "example": {
+                  "id": "789e0123-e45b-67d8-a901-234567890000",
+                  "amount": 1500,
+                  "status": "APPROVED"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete subscription",
+        "tags": ["Subscription Management"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "789e0123-e45b-67d8-a901-234567890000"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSubscriptionResponse"
+                },
+                "example": {
+                  "message": "Subscription deleted successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transaction": {
+      "get": {
+        "summary": "Get Transactions",
+        "tags": ["Transaction Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Transaction",
+        "tags": ["Transaction Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/transaction/{id}": {
+      "get": {
+        "summary": "Get Transaction By ID",
+        "tags": ["Transaction Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Transaction",
+        "tags": ["Transaction Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      }
+    },
+    "/api/v1/transaction/overview": {
+      "post": {
+        "summary": "Get Transactions Overview",
+        "tags": ["Transaction Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transactions overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionsOverviewResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio/performance": {
+      "get": {
+        "summary": "Get Portfolio Performance",
+        "tags": ["Portfolio Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved portfolio performance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetPortfolioPerformanceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio/total-investment": {
+      "get": {
+        "summary": "Get Total Investment",
+        "tags": ["Portfolio Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved total investment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTotalInvestmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio/summary": {
+      "get": {
+        "summary": "Get Portfolio Summary",
+        "tags": ["Portfolio Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved portfolio summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPortfolioSummaryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/partnership/overview/{id}": {
+      "get": {
+        "summary": "Get Partnership Overview",
+        "tags": ["Partnership Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved partnership overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetPartnershipOverviewResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      }
+    },
+    "/api/v1/partnership/performance/{filter}/{id}": {
+      "get": {
+        "summary": "Get Partnership Performance",
+        "tags": ["Partnership Management"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filter",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved partnership performance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetPartnershipPerformanceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          }
+        }
+      }
+    },
+    "/api/v1/lov/partners": {
+      "get": {
+        "summary": "Get Partnerships LOV",
+        "tags": ["LOV"],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved partnerships LOV",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetPartnershipsLOVResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/lov/countries": {
+      "get": {
+        "summary": "Get Countries LOV",
+        "tags": ["LOV"],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved countries LOV",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCountriesLOVResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/v1/lov/currencies": {
+      "get": {
+        "summary": "Get Currencies LOV",
+        "tags": ["LOV"],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved currencies LOV",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetCurrenciesLOVResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserRegistration": {
+        "type": "object",
+        "required": [
+          "first_name",
+          "last_name",
+          "email",
+          "password",
+          "role",
+          "postal_code",
+          "state",
+          "country"
+        ],
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "SecurePassword123"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["investor", "broker", "admin"],
+            "example": "investor"
+          },
+          "postal_code": {
+            "type": "string",
+            "example": "12345"
+          },
+          "state": {
+            "type": "string",
+            "example": "California"
+          },
+          "country": {
+            "type": "string",
+            "example": "USA"
+          },
+          "investor_profile": {
+            "$ref": "#/components/schemas/CreateInvestorProfileRequest"
+          },
+          "broker_profile": {
+            "$ref": "#/components/schemas/CreateBrokerProfileRequest"
+          },
+          "admin_profile": {
+            "$ref": "#/components/schemas/CreateAdminProfileRequest"
+          }
+        }
+      },
+      "CreateInvestorProfileRequest": {
+        "type": "object",
+        "required": ["phone", "address", "partner_code"],
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1-555-1234"
+          },
+          "address": {
+            "type": "string",
+            "example": "123 Main Street, Los Angeles, CA"
+          },
+          "partner_code": {
+            "type": "string",
+            "example": "PARTNER123"
+          }
+        }
+      },
+      "CreateBrokerProfileRequest": {
+        "type": "object",
+        "required": [
+          "first_name",
+          "last_name",
+          "phone",
+          "address",
+          "organisation_code"
+        ],
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "example": "Jane"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Smith"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1-555-5678"
+          },
+          "address": {
+            "type": "string",
+            "example": "456 Elm Street, New York, NY"
+          },
+          "organisation_code": {
+            "type": "string",
+            "example": "ORG456"
+          }
+        }
+      },
+      "CreateAdminProfileRequest": {
+        "type": "object",
+        "required": ["first_name", "last_name"],
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "example": "Alice"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Johnson"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1-555-9876"
+          },
+          "address": {
+            "type": "string",
+            "example": "789 Pine Street, Chicago, IL"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "SecurePassword123"
+          }
+        }
+      },
+      "ForgotPasswordRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          }
+        }
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "required": ["token", "password", "confirm_password"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "reset-token-123"
+          },
+          "password": {
+            "type": "string",
+            "example": "NewSecurePassword123"
+          },
+          "confirm_password": {
+            "type": "string",
+            "example": "NewSecurePassword123"
+          }
+        }
+      },
+      "VerifyEmailRequest": {
+        "type": "object",
+        "required": ["token"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "verification-token-123"
+          }
+        }
+      },
+      "SendVerificationEmailRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          }
+        }
+      },
+      "UpdateUserProfileRequest": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "postal_code": {
+            "type": "string",
+            "example": "12345"
+          },
+          "state": {
+            "type": "string",
+            "example": "California"
+          },
+          "country": {
+            "type": "string",
+            "example": "USA"
+          }
+        }
+      },
+      "UpdatePasswordRequest": {
+        "type": "object",
+        "required": ["current_password", "new_password", "confirm_password"],
+        "properties": {
+          "current_password": {
+            "type": "string",
+            "example": "OldPassword123"
+          },
+          "new_password": {
+            "type": "string",
+            "example": "NewSecurePassword123"
+          },
+          "confirm_password": {
+            "type": "string",
+            "example": "NewSecurePassword123"
+          }
+        }
+      },
+      "CreateFundRequest": {
+        "type": "object",
+        "required": ["name", "total_value", "roi", "ytd_performance", "active"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Growth Fund"
+          },
+          "description": {
+            "type": "string",
+            "example": "A fund focused on growth stocks."
+          },
+          "total_value": {
+            "type": "number",
+            "example": 1000000
+          },
+          "roi": {
+            "type": "number",
+            "example": 5.5
+          },
+          "ytd_performance": {
+            "type": "number",
+            "example": 10.2
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "UpdateFundRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Growth Fund"
+          },
+          "description": {
+            "type": "string",
+            "example": "A fund focused on growth stocks."
+          },
+          "total_value": {
+            "type": "number",
+            "example": 1000000
+          },
+          "roi": {
+            "type": "number",
+            "example": 5.5
+          },
+          "ytd_performance": {
+            "type": "number",
+            "example": 10.2
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "FundResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "totalValue": {
+            "type": "number"
+          },
+          "roi": {
+            "type": "number"
+          },
+          "ytdPerformance": {
+            "type": "number"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetAllFundsResponse": {
+        "type": "object",
+        "properties": {
+          "funds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FundResponse"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "CreateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "fundId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "CreateSubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "APPROVED", "ACTIVE", "INACTIVE", "CANCELLED"]
+          }
+        }
+      },
+      "GetSubscriptionByIdResponse": {
+        "type": "object",
+        "properties": {
+          "subscription": {
+            "$ref": "#/components/schemas/Subscription"
+          }
+        }
+      },
+      "UpdateSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "APPROVED", "ACTIVE", "INACTIVE", "CANCELLED"]
+          }
+        }
+      },
+      "UpdateSubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "APPROVED", "ACTIVE", "INACTIVE", "CANCELLED"]
+          }
+        }
+      },
+      "DeleteSubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fundId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "APPROVED", "ACTIVE", "INACTIVE", "CANCELLED"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateTransactionRequest": {
+        "type": "object",
+        "required": ["id", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "transaction-uuid-123"
+          },
+          "status": {
+            "type": "string",
+            "example": "completed"
+          },
+          "token": {
+            "type": "string",
+            "example": "transaction-token-123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "investor_id": {
+            "type": "string"
+          },
+          "fund_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "investor_id": {
+            "type": "string"
+          },
+          "fund_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetTransactionsOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "total_cashflow": {
+            "type": "number"
+          },
+          "cashflow_performance": {
+            "type": "number"
+          },
+          "total_buy": {
+            "type": "number"
+          },
+          "buy_performance": {
+            "type": "number"
+          },
+          "total_sell": {
+            "type": "number"
+          },
+          "sell_performance": {
+            "type": "number"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "postal_code": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "auth": {
+            "$ref": "#/components/schemas/AuthResponse"
+          },
+          "investor_profile": {
+            "$ref": "#/components/schemas/InvestorProfileResponse"
+          },
+          "broker_profile": {
+            "$ref": "#/components/schemas/BrokerProfileResponse"
+          },
+          "admin_profile": {
+            "$ref": "#/components/schemas/AdminProfileResponse"
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InvestorProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "BrokerProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "AdminProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        }
+      },
+      "UserStatusResponse": {
+        "type": "object",
+        "properties": {
+          "total_users": {
+            "type": "integer"
+          },
+          "total_completed": {
+            "type": "integer"
+          },
+          "total_active": {
+            "type": "integer"
+          },
+          "total_passive": {
+            "type": "integer"
+          }
+        }
+      },
+      "InvestorListResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "date_registered": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "number"
+          }
+        }
+      },
+      "GetPortfolioPerformanceResponse": {
+        "type": "object",
+        "properties": {
+          "total_investment": {
+            "type": "number"
+          },
+          "week_to_week_performance": {
+            "type": "number"
+          },
+          "day_to_day_performance": {
+            "type": "number"
+          },
+          "month_to_month_performance": {
+            "type": "number"
+          },
+          "fund": {
+            "$ref": "#/components/schemas/FundResponse"
+          }
+        }
+      },
+      "GetTotalInvestmentResponse": {
+        "type": "object",
+        "properties": {
+          "total_investment": {
+            "type": "number"
+          },
+          "week_to_week_performance": {
+            "type": "number"
+          }
+        }
+      },
+      "GetPortfolioSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "total_value": {
+            "type": "number"
+          },
+          "percentage_change": {
+            "type": "number"
+          }
+        }
+      },
+      "GetPartnershipOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "total_investment": {
+            "type": "number"
+          },
+          "total_profit": {
+            "type": "number"
+          },
+          "total_loss": {
+            "type": "number"
+          },
+          "total_roi": {
+            "type": "number"
+          },
+          "ytd_performance": {
+            "type": "number"
+          },
+          "partner": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "GetPartnershipPerformanceResponse": {
+        "type": "object",
+        "properties": {
+          "total_investment": {
+            "type": "number"
+          },
+          "total_roi": {
+            "type": "number"
+          },
+          "total_investors": {
+            "type": "integer"
+          },
+          "total_withdrawals": {
+            "type": "number"
+          },
+          "week_to_week_performance": {
+            "type": "number"
+          }
+        }
+      },
+      "GetPartnershipsLOVResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "GetCountriesLOVResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "country_name": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string"
+          },
+          "calling_code": {
+            "type": "integer"
+          }
+        }
+      },
+      "GetCurrenciesLOVResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "currency_code": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequestError": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

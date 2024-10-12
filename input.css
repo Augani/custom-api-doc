@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  @apply bg-gray-50;
+}
+
+.endpoint {
+  @apply mb-12 bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 ease-in-out;
+}
+
+.endpoint:hover {
+  @apply shadow-lg;
+}
+
+.endpoint h2 {
+  @apply text-xl font-semibold mb-4 px-6 py-4 bg-gray-50 border-b border-gray-200 text-blue-800;
+}
+
+.endpoint-content {
+  @apply p-6;
+}
+
+.code-sample {
+  @apply mt-4 rounded-lg overflow-hidden;
+}
+
+.code-sample pre {
+  @apply m-0;
+}
+
+.language-tabs {
+  @apply flex space-x-1 bg-gray-100 p-1 rounded-t-lg;
+}
+
+.language-tab {
+  @apply px-3 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-150 ease-in-out;
+}
+
+.language-tab.active {
+  @apply bg-gray-800 text-white;
+}
+
+.language-tab:not(.active) {
+  @apply text-gray-500 hover:text-gray-900 hover:bg-gray-200;
+}
+
+#sidebar-nav {
+  @apply p-4;
+}
+
+#sidebar-nav ul {
+  @apply space-y-4;
+}
+
+#sidebar-nav h3 {
+  @apply text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2;
+}
+
+#sidebar-nav ul ul {
+  @apply mt-2 space-y-1;
+}
+
+#sidebar-nav a {
+  @apply block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150 ease-in-out rounded;
+}
+
+#content {
+  @apply space-y-8;
+}
+
+/* Code block styling */
+.hljs {
+  @apply bg-gray-900 p-4 rounded-lg text-gray-100;
+  font-family: "Fira Code", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.hljs-keyword,
+.hljs-built_in,
+.hljs-type {
+  @apply text-purple-400 font-semibold;
+}
+
+.hljs-literal,
+.hljs-number {
+  @apply text-orange-400;
+}
+
+.hljs-regexp,
+.hljs-string {
+  @apply text-green-400;
+}
+
+.hljs-subst,
+.hljs-symbol,
+.hljs-class,
+.hljs-function {
+  @apply text-blue-400;
+}
+
+.hljs-title,
+.hljs-params {
+  @apply text-yellow-300;
+}
+
+.hljs-comment,
+.hljs-doctag,
+.hljs-meta {
+  @apply text-gray-500 italic;
+}
+
+.hljs-section,
+.hljs-name {
+  @apply text-red-400 font-semibold;
+}
+
+.hljs-tag,
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable {
+  @apply text-teal-300;
+}
+
+.highlight-section {
+  @apply bg-blue-100;
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+    @apply fixed left-0 top-0 bottom-0 w-full max-w-xs z-50 bg-white shadow-lg;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  #sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  .overlay {
+    @apply fixed inset-0 bg-black opacity-50 z-40;
+    display: none;
+  }
+  .overlay.active {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
